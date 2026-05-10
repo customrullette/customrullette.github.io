@@ -2,6 +2,10 @@ const STORAGE_KEY = "thecustomRouletteConfig.v1";
 const MIN_ROWS = 2;
 const MAX_ROWS = 24;
 const SPIN_DURATION = 7200;
+// 룰렛 조각의 기준 각도입니다.
+// CSS conic-gradient, ? 라벨, 당첨 위치 계산이 모두 이 값을 같이 사용해야
+// 설정 색상과 실제로 멈춘 칸 색상이 어긋나지 않습니다.
+const WHEEL_START_DEG = 0;
 
 const PALETTE = [
   { key: "yellow", color: "#f5c21b", label: "매우 낮은 확률", short: "전설 (노랑)" },
@@ -99,11 +103,6 @@ function getTotal(items) {
   return Math.round(items.reduce((sum, item) => sum + sanitizeProbability(item.probability), 0) * 100) / 100;
 }
 
-function colorRankForIndex(rank, total) {
-  if (total <= 1) return 0;
-  return Math.round((rank * (PALETTE.length - 1)) / (total - 1));
-}
-
 function assignPalette(items) {
   const probabilities = items.map((item) => sanitizeProbability(item.probability));
   const uniqueProbabilities = [...new Set(probabilities)].sort((a, b) => a - b);
@@ -178,6 +177,10 @@ function renderSummary(config) {
   statusEl.style.color = isTotalValid(total) ? "#7ee168" : "#ff9085";
 }
 
+function normalizeDegrees(degrees) {
+  return ((degrees % 360) + 360) % 360;
+}
+
 function makeWheelGradient(items) {
   const colored = assignPalette(items);
   const step = 360 / colored.length;
@@ -187,7 +190,7 @@ function makeWheelGradient(items) {
     const darkLineStart = Math.max(start, end - 0.7);
     return `${item.palette.color} ${start}deg ${darkLineStart}deg, rgba(0,0,0,.58) ${darkLineStart}deg ${end}deg`;
   });
-  return `conic-gradient(from -90deg, ${slices.join(",")})`;
+  return `conic-gradient(from ${WHEEL_START_DEG}deg, ${slices.join(",")})`;
 }
 
 function renderWheel(config) {
@@ -210,7 +213,7 @@ function renderWheel(config) {
     const label = document.createElement("div");
     label.className = "wheel-label";
     label.textContent = "?";
-    const angleFromTop = index * step + step / 2;
+    const angleFromTop = WHEEL_START_DEG + index * step + step / 2;
     const radians = (angleFromTop * Math.PI) / 180;
     const x = 50 + Math.sin(radians) * labelRadius;
     const y = 50 - Math.cos(radians) * labelRadius;
@@ -343,14 +346,17 @@ function spinRoulette(config) {
   startRouletteSound();
 
   const colored = assignPalette(config.items);
-  const { item, index } = pickWeightedItem(config.items);
-  const step = 360 / config.items.length;
-  const segmentCenter = index * step + step / 2;
+  const { item, index } = pickWeightedItem(colored);
+  const step = 360 / colored.length;
+
+  // 화면의 조각 색상, 설정표의 색상, 당첨 결과의 색상을 같은 colored 배열 기준으로 맞춥니다.
+  // 선택된 조각의 중심각을 포인터(12시 방향)에 오게 회전시켜 실제 멈춘 칸과 결과가 일치합니다.
+  const segmentCenter = WHEEL_START_DEG + index * step + step / 2;
   const fullTurns = 7 + Math.floor(Math.random() * 3);
-  const randomOffsetWithinSegment = (Math.random() - 0.5) * Math.max(2, step * 0.48);
-  const desiredModulo = ((-segmentCenter + randomOffsetWithinSegment) % 360 + 360) % 360;
-  const currentModulo = ((currentRotation % 360) + 360) % 360;
-  const moduloDelta = (desiredModulo - currentModulo + 360) % 360;
+  const randomOffsetWithinSegment = (Math.random() - 0.5) * Math.max(2, step * 0.42);
+  const desiredModulo = normalizeDegrees(-(segmentCenter + randomOffsetWithinSegment));
+  const currentModulo = normalizeDegrees(currentRotation);
+  const moduloDelta = normalizeDegrees(desiredModulo - currentModulo);
   currentRotation += fullTurns * 360 + moduloDelta;
   wheel.style.transform = `rotate(${currentRotation}deg)`;
 
@@ -358,7 +364,7 @@ function spinRoulette(config) {
     stopRouletteSound();
     isSpinning = false;
     spinButton.disabled = false;
-    openReveal(item, colored[index]);
+    openReveal(item, item);
   }, SPIN_DURATION + 120);
 }
 
