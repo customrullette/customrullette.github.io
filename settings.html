@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>룰렛 설정 - 더커스텀 룰렛</title>
+  <meta name="description" content="더커스텀 룰렛 상품과 확률 설정 페이지" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="settings">
+  <div class="page-shell settings-shell">
+    <div class="ambient-bg" aria-hidden="true">
+      <div class="curtain curtain-left"></div>
+      <div class="curtain curtain-right"></div>
+      <div class="room-lights"></div>
+      <div class="left-showcase">
+        <div class="wall-sign">행운의 순간,<br/>특별한 선물!<span>🎁</span></div>
+        <div class="glass-cabinet"><i></i><i></i><i></i><i></i></div>
+        <div class="floor-gift gift-a"></div>
+        <div class="floor-gift gift-b"></div>
+      </div>
+      <div class="right-machine">
+        <div class="machine-sign">GOOD LUCK!</div>
+        <div class="machine-glass"><b></b><b></b><b></b><b></b></div>
+        <div class="machine-base"></div>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="nav-left" aria-label="주 메뉴">
+        <a href="index.html">홈</a>
+        <a href="index.html#info">룰렛 소개</a>
+        <a href="index.html#example">뽑기 예시</a>
+        <a href="index.html#guide">사용 가이드</a>
+        <a href="index.html#faq">자주 묻는 질문</a>
+      </nav>
+      <a class="brand-sign" href="index.html" aria-label="더커스텀 룰렛 메인으로 이동">
+        <span class="bulbs"></span>
+        <strong>더커스텀 룰렛</strong>
+        <em>THE CUSTOM ROULETTE</em>
+      </a>
+      <nav class="nav-right" aria-label="보조 메뉴">
+        <a href="index.html">🎁 예시 룰렛</a>
+        <a href="index.html#guide">📖 사용 가이드</a>
+        <button class="moon-toggle" type="button" aria-label="장식용 다크모드 버튼">☾</button>
+      </nav>
+    </header>
+
+    <main class="settings-layout">
+      <section class="settings-card panel">
+        <div class="settings-head">
+          <div>
+            <h1>⚙ 룰렛 설정</h1>
+            <p>룰렛의 항목과 확률을 설정하여 나만의 룰렛을 만들어보세요.</p>
+          </div>
+          <div class="count-control" aria-label="룰렛 칸 개수 설정">
+            <span>룰렛 칸 개수</span>
+            <div>
+              <button id="decreaseCount" type="button">−</button>
+              <strong id="slotCountView">7</strong>
+              <button id="increaseCount" type="button">＋</button>
+            </div>
+          </div>
+          <div class="prob-help">
+            <strong>ⓘ 확률 입력 안내</strong>
+            <p>각 칸의 확률은 숫자 또는 소수로 입력합니다.<br/>예) 25.5 입력 시 25.5%</p>
+          </div>
+        </div>
+
+        <div class="settings-table-wrap">
+          <table class="settings-table">
+            <thead>
+              <tr>
+                <th>순번</th>
+                <th>상품명</th>
+                <th>확률 (%)</th>
+                <th>색상 / 희귀도 미리보기</th>
+                <th>작업</th>
+              </tr>
+            </thead>
+            <tbody id="settingsRows"></tbody>
+          </table>
+        </div>
+
+        <div class="settings-footer">
+          <div class="footer-left">
+            <button class="outline-action" id="addRowButton" type="button">＋ 항목 추가</button>
+            <button class="danger-action" id="removeLastButton" type="button">🗑 항목 삭제</button>
+          </div>
+          <div class="total-box" id="totalBox">
+            <span>총 확률 합계</span>
+            <strong><b id="totalProbabilityView">0</b>%</strong>
+          </div>
+          <div class="footer-right">
+            <a class="secondary-action link-action" href="index.html">← 메인으로 돌아가기</a>
+            <button class="primary-action" id="saveButton" type="button">▣ 저장하기</button>
+          </div>
+        </div>
+        <p class="settings-message" id="settingsMessage">저장 후 메인으로 돌아가면 설정한 항목과 확률이 그대로 적용됩니다.</p>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
