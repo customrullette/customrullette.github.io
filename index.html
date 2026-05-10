@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>더커스텀 룰렛</title>
+  <meta name="description" content="확률과 상품을 직접 설정하는 프리미엄 뽑기 룰렛 사이트" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body data-page="main">
+  <div class="page-shell">
+    <div class="ambient-bg" aria-hidden="true">
+      <div class="curtain curtain-left"></div>
+      <div class="curtain curtain-right"></div>
+      <div class="room-lights"></div>
+      <div class="left-showcase">
+        <div class="wall-sign">행운의 순간,<br/>특별한 선물!<span>🎁</span></div>
+        <div class="glass-cabinet">
+          <i></i><i></i><i></i><i></i>
+        </div>
+        <div class="star-bulb">★</div>
+        <div class="floor-gift gift-a"></div>
+        <div class="floor-gift gift-b"></div>
+      </div>
+      <div class="right-machine">
+        <div class="machine-sign">GOOD LUCK!</div>
+        <div class="machine-glass">
+          <b></b><b></b><b></b><b></b>
+        </div>
+        <div class="machine-base"></div>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <nav class="nav-left" aria-label="주 메뉴">
+        <a class="active" href="index.html">홈</a>
+        <a href="#info">룰렛 소개</a>
+        <a href="#example">뽑기 예시</a>
+        <a href="#guide">사용 가이드</a>
+        <a href="#faq">자주 묻는 질문</a>
+      </nav>
+      <a class="brand-sign" href="index.html" aria-label="더커스텀 룰렛 메인으로 이동">
+        <span class="bulbs"></span>
+        <strong>더커스텀 룰렛</strong>
+        <em>THE CUSTOM ROULETTE</em>
+      </a>
+      <nav class="nav-right" aria-label="보조 메뉴">
+        <a href="settings.html">🎁 예시 룰렛</a>
+        <a href="#guide">📖 사용 가이드</a>
+        <button class="moon-toggle" type="button" aria-label="장식용 다크모드 버튼">☾</button>
+      </nav>
+    </header>
+
+    <main class="main-layout">
+      <aside class="panel legend-panel" id="info">
+        <h2>✦ 확률 및 색상 안내 ✦</h2>
+        <p>낮은 확률일수록 더 특별한 색상으로 표시돼요. 상품명은 돌리는 동안 공개되지 않습니다.</p>
+        <div class="legend-list" id="legendList"></div>
+        <div class="configured-items">
+          <h3>설정된 상품 / 확률</h3>
+          <div class="item-probability-list" id="itemProbabilityList"></div>
+        </div>
+        <small>※ 같은 확률은 같은 색상으로 표시됩니다.</small>
+      </aside>
+
+      <section class="roulette-stage" aria-label="룰렛 영역">
+        <div class="pointer" aria-hidden="true"></div>
+        <div class="roulette-frame">
+          <div class="light-ring" aria-hidden="true"></div>
+          <div class="wheel-face" id="wheelFace"></div>
+          <button class="spin-button" id="spinButton" type="button">
+            <span>돌리기</span>
+            <i></i>
+          </button>
+        </div>
+        <div class="stage-base"></div>
+        <div class="bottom-notice">
+          <span class="notice-icon">🎁</span>
+          <div>
+            <strong>룰렛이 멈추면, 당첨된 보상이 선물 상자 애니메이션으로 공개됩니다!</strong>
+            <p>짜릿한 순간을 기대하세요.</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel summary-panel" aria-label="룰렛 요약 정보">
+        <h2>✦ 룰렛 요약 정보 ✦</h2>
+        <div class="summary-row">
+          <span class="summary-icon">▣</span>
+          <span>전체 항목 수</span>
+          <strong><b id="summaryCount">0</b>개</strong>
+        </div>
+        <div class="summary-row">
+          <span class="summary-icon">◔</span>
+          <span>확률 설정 완료</span>
+          <strong class="green"><b id="summaryTotal">0</b>%</strong>
+        </div>
+        <div class="summary-row">
+          <span class="summary-icon">✓</span>
+          <span>상태</span>
+          <strong id="summaryStatus">확인 중</strong>
+        </div>
+        <div class="summary-sub">
+          <h3>최근 활동</h3>
+          <dl>
+            <div><dt>최근 저장</dt><dd id="summarySaved">-</dd></div>
+            <div><dt>룰렛 이름</dt><dd>새로운 룰렛</dd></div>
+            <div><dt>설정 모드</dt><dd>일반 모드</dd></div>
+          </dl>
+        </div>
+        <button class="ghost-button" type="button" id="previewButton">👁 미리보기</button>
+      </aside>
+    </main>
+
+    <a class="floating-settings" href="settings.html" aria-label="뽑기 설정 페이지로 이동">
+      <span>⚙</span>
+      <strong>뽑기 설정</strong>
+      <i>›</i>
+    </a>
+  </div>
+
+  <div class="reveal-layer" id="revealLayer" aria-hidden="true">
+    <div class="reveal-backdrop"></div>
+    <div class="gift-scene">
+      <div class="result-card" id="resultCard">
+        <span>🎉 축하합니다! 당신의 당첨 상품</span>
+        <strong id="resultName">상품명</strong>
+        <em id="resultMeta">확률 정보</em>
+      </div>
+      <div class="gift-box" id="giftBox">
+        <div class="gift-lid"></div>
+        <div class="gift-light"></div>
+        <div class="gift-body"><span>?</span></div>
+      </div>
+      <div class="reveal-actions">
+        <h2>✦ 축하합니다! 행운의 보상이 준비되었습니다! ✦</h2>
+        <button class="primary-action" id="againButton" type="button">↻ 다시 돌리기</button>
+        <button class="secondary-action" id="closeRevealButton" type="button">⌂ 메인으로</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
